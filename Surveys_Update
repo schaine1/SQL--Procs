@@ -1,0 +1,84 @@
+ALTER proc [dbo].[Surveys_UpdateV2]
+			  @SurveyId int
+			, @Name nvarchar(100)
+			, @Description nvarchar(2000)
+			, @StatusId int
+			, @SurveyTypeId int
+			, @TitleTypesId int
+			, @PrimaryImageUrl nvarchar(2000)
+			, @BasicPlanList BasicPlanListTypes READONLY
+			, @ModifiedBy int
+
+as
+
+/*
+	----TEST CODE----
+	Declare   @SurveyId int = 3
+			, @Name nvarchar(100) = 'Canadia'
+			, @Description nvarchar(2000) = 'This is a survey for Canadia'
+			, @StatusId int = 1
+			, @SurveyTypeId int = 1
+			, @TitleTypesId int= 2
+			, @PrimaryImageUrl nvarchar(2000) = null
+			,@ModifiedBy int = 2
+
+     Declare @BasicPlanList AS BasicPlanListTypes
+
+	 Insert Into @BasicPlanList([BasicPlanTypesId]) VALUES(1)
+     Insert Into @BasicPlanList([BasicPlanTypesId]) VALUES(2)
+
+	  Select * From  dbo.SurveyPlanTypes
+      Where SurveyId = @SurveyId
+
+	  Select *
+		From	dbo.Surveys
+		Where Id = @SurveyId
+
+	Execute dbo.Surveys_UpdateV2					
+		      @SurveyId 
+			, @Name 
+			, @Description 
+			, @StatusId 
+			, @SurveyTypeId 
+			, @TitleTypesId
+			, @PrimaryImageUrl
+			, @BasicPlanList
+			, @ModifiedBy 
+
+
+ Select * From  dbo.SurveyPlanTypes
+      Where SurveyId = @SurveyId
+
+	  Select *
+		From	dbo.Surveys
+		Where Id = @SurveyId
+
+
+*/
+
+BEGIN
+		DECLARE @DateModified datetime2(7) = getutcdate()
+
+
+		UPDATE [dbo].[Surveys]
+		   SET [Name] = @Name
+			  ,[Description] = @Description
+			  ,[StatusId] = @StatusId
+			  ,[SurveyTypeId] = @SurveyTypeId
+			  ,[TitleTypesId]=@TitleTypesId
+			  ,[PrimaryImageUrl] =@PrimaryImageUrl
+			  ,[ModifiedBy] = @ModifiedBy
+			  ,[DateModified] = @DateModified
+
+
+		 WHERE Id = @SurveyId
+
+		 Execute  dbo.SurveyPlanTypes_DeletebyId 
+								@SurveyId 
+
+		 Execute dbo.SurveyPlanTypes_Insert_Multiple
+							   @SurveyId
+							  ,@BasicPlanList;
+							  
+ 
+END
