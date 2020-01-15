@@ -1,0 +1,25 @@
+ALTER proc [dbo].[SurveyPlanTypes_DeletebyId]
+                     @SurveyId Int
+as
+/*
+   Declare @SurveyId Int = 8
+
+   Select * From  dbo.SurveyPlanTypes
+   Where SurveyId = @SurveyId
+
+   Execute Dbo.SurveyPlanTypes_DeletebyId
+                     @SurveyId
+
+					 
+   Select * From  dbo.SurveyPlanTypes
+   Where SurveyId = @SurveyId
+
+
+
+*/
+
+Begin
+   Delete From dbo.SurveyPlanTypes
+         Where SurveyId = @SurveyId;
+
+End
