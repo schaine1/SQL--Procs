@@ -1,0 +1,46 @@
+ALTER proc [dbo].[Surveys_SelectByIdV2]
+			@Id int
+
+as 
+/*
+	----TEST CODE----
+
+	Declare @Id int =9
+
+	Execute dbo.Surveys_SelectByIdV2 @Id
+
+
+
+*/
+
+BEGIN
+		SELECT s.Id, 
+               s.Name, 
+               s.Description, 
+               ss.Id as SurveyStatusId,
+			   ss.Name AS SurveyStatus, 
+			   s.SurveyTypeId,
+               st.Name AS SurveyType, 
+			   s.TitleTypesId,
+			   tt.Name AS Titles,
+			   s.PrimaryImageUrl,
+               s.CreatedBy, 
+               s.ModifiedBy, 
+               s.DateCreated, 
+               s.DateModified,
+			   (Select BP.[Id]
+						,BP.[Name]
+						from dbo.SurveyPlanTypes as SP
+						JOIN dbo.BasicPlanTypes as BP
+						on SP.BasicPlanTypesId=BP.Id
+						where SP.SurveyId = s.Id
+						For JSON Auto) As BasicPlanTypes
+		   FROM dbo.Surveys AS s
+            JOIN dbo.SurveyTypes AS st 
+			 ON s.SurveyTypeId = st.Id
+            JOIN dbo.SurveyStatus AS ss 
+			 ON s.StatusId = ss.Id
+			 left JOIN dbo.TitleTypes AS tt
+			 ON s.TitleTypesId = tt.Id
+		  WHERE @Id = s.Id
+END
