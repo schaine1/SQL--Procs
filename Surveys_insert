@@ -1,0 +1,73 @@
+ALTER proc [dbo].[Surveys_InsertV2]
+			@Id int OUTPUT
+			, @Name nvarchar(100)
+			, @Description nvarchar(2000)
+			, @StatusId int
+			, @SurveyTypeId int
+			, @TitleTypesId int
+			, @PrimaryImageUrl nvarchar(2000)
+			, @CreatedBy int
+			,@BasicPlanListTypes BasicPlanListTypes READONLY
+
+
+/*
+	----TEST CODE----
+
+	Declare @Id int = 0
+			, @Name nvarchar(100) = 'Texas'
+			, @Description nvarchar(2000) = 'survey for Alabama'
+			, @StatusId int = 1
+			, @SurveyTypeId int = 1
+			, @TitleTypesId int = 2
+			, @PrimaryImageUrl nvarchar(2000) =''
+			, @CreatedBy int = 1
+	 
+	 
+	 Insert Into @BasicPlanList([BasicPlanTypesId]) VALUES(1)
+     Insert Into @BasicPlanList([BasicPlanTypesId]) VALUES(2)
+
+	Execute dbo.Surveys_InsertV2
+								@Id OUTPUT
+								, @Name
+								, @Description
+								, @StatusId
+								, @SurveyTypeId
+								, @TitleTypesId
+								, @PrimaryImageUrl
+								, @CreatedBy
+						        ,@BasicPlanListTypes BasicPlanListTypes
+								
+	Select	*
+	From	dbo.Surveys
+
+
+*/
+AS
+
+	BEGIN
+
+		INSERT INTO [dbo].[Surveys]
+				   ([Name]
+				   ,[Description]
+				   ,[StatusId]
+				   ,[SurveyTypeId]
+				   ,[TitleTypesId]
+				   ,[PrimaryImageUrl]
+				   ,[CreatedBy]
+				   ,[ModifiedBy])
+			 VALUES
+				   (@Name
+				   ,@Description
+				   ,@StatusId
+				   ,@SurveyTypeId
+				   ,@TitleTypesId
+				   ,@PrimaryImageUrl
+				   ,@CreatedBy
+				   ,@CreatedBy)
+
+		SET @Id = SCOPE_IDENTITY()
+
+		Execute dbo.SurveyPlanTypes_Insert_Multiple
+               @Id
+			  ,@BasicPlanListTypes
+END
