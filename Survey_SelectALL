@@ -1,0 +1,45 @@
+ALTER PROC [dbo].[Surveys_SelectAll] @pageIndex INT, 
+                                     @pageSize  INT
+AS
+
+/*
+	----TEST CODE----
+	Declare @pageIndex int = 0
+			, @pageSize int = 10
+
+	Declare @offset int = @pageSize * @pageIndex
+
+	Execute dbo.Surveys_SelectAll
+								@pageIndex
+								, @pageSize
+
+
+*/
+
+    BEGIN
+        DECLARE @offset INT= @pageIndex * @pageSize;
+        SELECT s.Id, 
+               s.Name, 
+               s.Description, 
+               ss.Id as SurveyStatusId,
+			   ss.Name AS SurveyStatus, 
+			   s.SurveyTypeId,
+               st.Name AS SurveyType,
+			   s.TitleTypesId,
+			   tt.Name AS Titles,
+			   s.PrimaryImageUrl,
+               s.CreatedBy, 
+               s.ModifiedBy, 
+               s.DateCreated, 
+               s.DateModified, 
+               TotalCount = COUNT(1) OVER()
+        FROM dbo.Surveys AS s
+             inner JOIN dbo.SurveyTypes AS st 
+			 ON s.SurveyTypeId = st.Id 
+             inner JOIN dbo.SurveyStatus AS ss 
+			 ON s.StatusId = ss.Id
+			left JOIN dbo.TitleTypes AS tt
+			 ON s.TitleTypesId = tt.Id
+        ORDER BY DateModified
+        OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY;
+    END;
