@@ -1,0 +1,19 @@
+ALTER proc [dbo].[SurveyStatus_SelectAll]
+
+
+as
+/*----TEST CODE----
+
+		Execute dbo.SurveyStatus_SelectAll
+		
+
+*/
+
+BEGIN
+		SELECT [Id]
+			  ,[Name]
+			  
+		  FROM [dbo].[SurveyStatus]
+		  ORDER BY Id
+
+END
