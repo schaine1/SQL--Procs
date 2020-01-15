@@ -1,0 +1,36 @@
+ALTER proc [dbo].[SurveyPlanTypes_Insert_Multiple]
+               @SurveyId Int
+			  ,@BasicPlanListTypes BasicPlanListTypes READONLY
+
+AS
+/*
+				 Declare @SurveyId int = 13
+				 , @BasicPlanList AS BasicPlanListTypes
+
+Insert Into @BasicPlanList([BasicPlanTypesId]) VALUES(1)
+Insert Into @BasicPlanList([BasicPlanTypesId]) VALUES(2)
+Insert Into @BasicPlanList([BasicPlanTypesId]) VALUES(3)
+
+ Execute dbo.SurveyPlanTypes_Insert_Multiple
+               @SurveyId
+			  ,@BasicPlanList
+ 
+ Select *
+ From dbo.SurveyPlanTypes
+ Where SurveyId = @SurveyId
+
+*/
+
+
+Begin 
+       INSERT INTO
+	   DBO.SurveyPlanTypes
+	   (SurveyId
+	    ,BasicPlanTypesId)
+
+	Select @SurveyId,BasicPlanTypesId
+	From @BasicPlanListTypes
+
+
+
+End
